@@ -1,0 +1,26 @@
+example-single: 
+  services: 
+    "python-django": 
+      charm: "cs:precise/python-django-6"
+      num_units: 1
+      annotations: 
+        "gui-x": "290"
+        "gui-y": "158"
+    gunicorn: 
+      charm: "cs:precise/gunicorn-9"
+      num_units: 0
+      annotations: 
+        "gui-x": "603"
+        "gui-y": "162"
+    postgresql: 
+      charm: "cs:precise/postgresql-62"
+      num_units: 1
+      annotations: 
+        "gui-x": "289.5"
+        "gui-y": "470"
+  relations: 
+    - - "gunicorn:wsgi-file"
+      - "python-django:wsgi"
+    - - "python-django:pgsql"
+      - "postgresql:db"
+  series: precise

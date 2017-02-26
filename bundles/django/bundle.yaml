@@ -1,0 +1,24 @@
+series: trusty
+machines:
+  '0':
+    series: trusty
+  '1':
+    series: xenial
+services:
+  gunicorn:
+    charm: cs:trusty/gunicorn
+  postgresql:
+    charm: cs:xenial/postgresql
+    num_units: 1
+    to:
+    - 1
+  python-django:
+    charm: cs:trusty/python-django
+    num_units: 1
+    to:
+    - 0
+relations:
+- - gunicorn:wsgi-file
+  - python-django:wsgi
+- - python-django:pgsql
+  - postgresql:db
