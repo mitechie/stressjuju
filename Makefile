@@ -26,7 +26,7 @@ sysdeps:
 .venv: .venv/bin/python
 .venv/bin/python:
 	virtualenv -p /usr/bin/python3 .venv
-	$(PIP) install -e python-libjuju
+	$(PIP) install juju
 	$(PIP) install click
 
 .PHONY: clean_venv

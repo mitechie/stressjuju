@@ -1,1 +1,0 @@
-python stressjuju/stressjuju.py -c guimaas -n 500 -p 2 bundles/django
