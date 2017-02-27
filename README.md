@@ -31,5 +31,3 @@ test.
 - `-p` how many parallel models can run at once. In the example we're running 4
 total models 2 at a time.
 - `bundles/django` this will run the test django bundle that's included ootb.
-
-
