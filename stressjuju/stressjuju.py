@@ -22,13 +22,14 @@ log = logging.getLogger(__name__)
 
 @click.command()
 @click.option('--controller', '-c', help="Controller to stress test.")
+@click.option('--credential', help="Credential used to talk to the controller.")
 @click.option(
     '--num-runs', '-n', default=1, type=int,
     help="How many models to create/destroy")
 @click.option('--parallel', '-p', default=1, type=int,
               help="How many at a time to perform these.")
 @click.argument('deploy', nargs=1, type=str)
-def run(deploy, controller, num_runs, parallel):
+def run(deploy, controller, credential, num_runs, parallel):
 
     loop = asyncio.get_event_loop()
     loop.set_debug(False)
@@ -40,7 +41,7 @@ def run(deploy, controller, num_runs, parallel):
         while run < num_runs and len(running) < parallel:
             log.info("Running model number {}".format(run))
             running.append(
-                loop.create_task(stress(loop, controller, run, deploy))
+                loop.create_task(stress(loop, controller, credential, run, deploy))
             )
             run = run + 1
         loop.run_until_complete(asyncio.gather(
@@ -49,7 +50,7 @@ def run(deploy, controller, num_runs, parallel):
     loop.close()
 
 
-async def stress(loop, controller, model_id, deploy):
+async def stress(loop, controller, credential, model_id, deploy):
     model_name = "{}-{}".format('stress', model_id)
     data = JujuData()
     controllers = data.controllers()
@@ -62,7 +63,7 @@ async def stress(loop, controller, model_id, deploy):
     # Blocking call which returns when the display_date() coroutine is done
     await cont.connect_controller(controller)
     stress = await cont.add_model(model_name,
-                                  credential_name='guimaas-rharding')
+                                  credential_name=credential)
     # add_model will auto connect to the model that's returned.
     log.debug('Deploying {}'.format(deploy))
     bundle_deploy = await stress.deploy(deploy)
