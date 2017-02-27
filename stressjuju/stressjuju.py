@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 @click.command()
 @click.option('--controller', '-c', help="Controller to stress test.")
-@click.option('--credential', help="Credential used to talk to the controller.")
+@click.option('--credential', help="Credential used for selected controller.")
 @click.option(
     '--num-runs', '-n', default=1, type=int,
     help="How many models to create/destroy")
@@ -41,7 +41,8 @@ def run(deploy, controller, credential, num_runs, parallel):
         while run < num_runs and len(running) < parallel:
             log.info("Running model number {}".format(run))
             running.append(
-                loop.create_task(stress(loop, controller, credential, run, deploy))
+                loop.create_task(
+                    stress(loop, controller, credential, run, deploy))
             )
             run = run + 1
         loop.run_until_complete(asyncio.gather(
