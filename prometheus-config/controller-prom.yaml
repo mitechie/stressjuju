@@ -1,0 +1,11 @@
+- job_name: juju
+  metrics_path: /introspection/metrics
+  scheme: https
+  static_configs:
+    - targets: ['10.0.0.X:17070']
+  basic_auth:
+    username: user-prometheus
+    password: testing
+  tls_config:
+    insecure_skip_verify: true
+    # ca_file: /var/snap/prometheus/common/juju-ca.crt
