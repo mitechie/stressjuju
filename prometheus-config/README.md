@@ -22,16 +22,20 @@ controller machine.
     juju deploy cs:~prometheus-charmers/prometheus --to 0
     juju deploy cs:telegraf
 
-    # This relation will tell telgraf to monitor the machine prometheus is on
-    # (machine 0) as a subordinate.
+    # This relation will tell telgraf to monitor the machine
     juju relate telegraf:juju-info prometheus:juju-info
+    juju expose telegraf
     # This relation is to add the telegraf /metrics endpoint to prometheus for graphing.
     juju relate telegraf:prometheus-client prometheus:target
 
-You can check the is coming in on telegraf http://$CONTROLLER_IP:9103/metrics
+You can check the is coming in on telegraf if you first expose telegraf.
+
+    juju expose telegraf
+    http://$CONTROLLER_IP:9103/metrics
 
 Next up, configure Prometheus with the Juju target data.
 
+    # Note that you don't need to register with this 'bot' user
     juju add-user prometheus
     juju change-user-password prometheus
     juju grant prometheus read controller
@@ -63,8 +67,14 @@ into a container on the host isn't always going to work on all providers.
     juju config grafana admin_password=$PASSWORD
 
 
-Now log into your Grafana url and setup the data source to your Prometheus
-instance.
+Now log into your Grafana url
+
+- http://$ipaddr:3000
+- username: admin
+- password: $whatever_you_set_in_above_config
+
+
+and setup the data source to your Prometheus instance.
 
 - data type prometheus
 - direct access
