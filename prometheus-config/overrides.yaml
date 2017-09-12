@@ -1,0 +1,4 @@
+applications:
+  grafana:
+    options:
+      admin_password: ImChanged

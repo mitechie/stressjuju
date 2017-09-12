@@ -33,6 +33,20 @@ You can check the is coming in on telegraf if you first expose telegraf.
     juju expose telegraf
     http://$CONTROLLER_IP:9103/metrics
 
+
+    juju scp mongodb_exporter 0:
+    juju run --machine 0 -- sudo mv /home/ubuntu/mongodb_exporter
+    /var/snap/prometheus/common/
+    juju controller-config ca-cert > ca-cert.pem
+    juju scp ca-cert.pem 0:
+    juju run --machine 0 -- sudo mv /home/ubuntu/ca-cert.pem
+    /var/snap/prometheus/common/
+    juju run --machine 0 "sudo /var/snap/prometheus/common/mongodb_exporter -v 10 -alsologtostderr -mongodb.uri mongodb://machine-0:3dSX4L6fw0nNq2hyivGqgGnZP@127.0.0.1:37017/admin -mongodb.collect.database -mongodb.tls-cert /var/lib/juju/server.pem -mongodb.tls-ca /var/snap/prometheus/common/ca-cert.pem"
+
+
+
+
+
 Next up, configure Prometheus with the Juju target data.
 
     # Note that you don't need to register with this 'bot' user
